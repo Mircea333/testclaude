@@ -8,10 +8,15 @@ struct NoteEditorView: View {
     let isNew: Bool
 
     @State private var showingDeleteAlert = false
+    @State private var showingReminderPicker = false
+    @State private var showingMetadata = false
     @FocusState private var isTitleFocused: Bool
 
     var body: some View {
         VStack(spacing: 0) {
+            // Metadata bar
+            metadataBar
+
             TextField("Title", text: $note.title)
                 .font(.title2.bold())
                 .padding(.horizontal)
@@ -46,6 +51,66 @@ struct NoteEditorView: View {
             } else {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
+                        // Flag toggle
+                        Button {
+                            note.isFlagged.toggle()
+                        } label: {
+                            Label(
+                                note.isFlagged ? "Remove Flag" : "Flag Note",
+                                systemImage: note.isFlagged ? "flag.slash" : "flag.fill"
+                            )
+                        }
+
+                        // Priority submenu
+                        Menu {
+                            ForEach(NotePriority.allCases, id: \.self) { priority in
+                                Button {
+                                    note.priority = priority
+                                } label: {
+                                    HStack {
+                                        if priority != .none {
+                                            Image(systemName: priority.iconName)
+                                        }
+                                        Text(priority.label)
+                                        if note.priority == priority {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                }
+                            }
+                        } label: {
+                            Label("Priority", systemImage: "exclamationmark.3")
+                        }
+
+                        // Reminder
+                        Button {
+                            showingReminderPicker = true
+                        } label: {
+                            Label(
+                                note.hasReminder ? "Edit Reminder" : "Add Reminder",
+                                systemImage: "bell"
+                            )
+                        }
+
+                        if note.hasReminder {
+                            Button {
+                                note.reminderDate = nil
+                            } label: {
+                                Label("Remove Reminder", systemImage: "bell.slash")
+                            }
+                        }
+
+                        Divider()
+
+                        // Show info
+                        Button {
+                            showingMetadata = true
+                        } label: {
+                            Label("Note Info", systemImage: "info.circle")
+                        }
+
+                        Divider()
+
                         Button(role: .destructive) {
                             showingDeleteAlert = true
                         } label: {
@@ -76,6 +141,165 @@ struct NoteEditorView: View {
         } message: {
             Text("Are you sure you want to delete this note? This action cannot be undone.")
         }
+        .sheet(isPresented: $showingReminderPicker) {
+            reminderPickerSheet
+        }
+        .sheet(isPresented: $showingMetadata) {
+            noteInfoSheet
+        }
+    }
+
+    // MARK: - Metadata Bar
+
+    private var metadataBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                // Flag chip
+                Button {
+                    note.isFlagged.toggle()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: note.isFlagged ? "flag.fill" : "flag")
+                            .font(.caption2)
+                        Text(note.isFlagged ? "Flagged" : "Flag")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(note.isFlagged ? Color.orange.opacity(0.15) : Color(.tertiarySystemFill))
+                    .foregroundColor(note.isFlagged ? .orange : .secondary)
+                    .cornerRadius(14)
+                }
+
+                // Priority picker
+                Menu {
+                    ForEach(NotePriority.allCases, id: \.self) { priority in
+                        Button {
+                            note.priority = priority
+                        } label: {
+                            HStack {
+                                if priority != .none {
+                                    Image(systemName: priority.iconName)
+                                }
+                                Text(priority.label)
+                                if note.priority == priority {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        if note.priority != .none {
+                            Image(systemName: note.priority.iconName)
+                                .font(.caption2)
+                        }
+                        Text(note.priority == .none ? "Priority" : note.priority.label)
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(note.priority != .none ? priorityColor.opacity(0.15) : Color(.tertiarySystemFill))
+                    .foregroundColor(note.priority != .none ? priorityColor : .secondary)
+                    .cornerRadius(14)
+                }
+
+                // Reminder chip
+                Button {
+                    showingReminderPicker = true
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: note.hasReminder ? "bell.fill" : "bell")
+                            .font(.caption2)
+                        if let date = note.reminderDate {
+                            Text(date.formatted(date: .abbreviated, time: .shortened))
+                                .font(.caption)
+                                .fontWeight(.medium)
+                        } else {
+                            Text("Reminder")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                        }
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(note.hasReminder ? Color.purple.opacity(0.15) : Color(.tertiarySystemFill))
+                    .foregroundColor(note.hasReminder ? .purple : .secondary)
+                    .cornerRadius(14)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 6)
+        }
+        .background(Color(.systemGroupedBackground).opacity(0.5))
+    }
+
+    // MARK: - Reminder Picker Sheet
+
+    private var reminderPickerSheet: some View {
+        NavigationStack {
+            ReminderPickerView(
+                reminderDate: Binding(
+                    get: { note.reminderDate ?? Date().addingTimeInterval(3600) },
+                    set: { note.reminderDate = $0 }
+                ),
+                hasReminder: Binding(
+                    get: { note.hasReminder },
+                    set: { if !$0 { note.reminderDate = nil } }
+                )
+            )
+        }
+    }
+
+    // MARK: - Note Info Sheet
+
+    private var noteInfoSheet: some View {
+        NavigationStack {
+            List {
+                Section("Details") {
+                    LabeledContent("Created", value: note.createdAt.formatted(date: .long, time: .shortened))
+                    LabeledContent("Modified", value: note.updatedAt.formatted(date: .long, time: .shortened))
+                    LabeledContent("Characters", value: "\(note.content.count)")
+                    LabeledContent("Words", value: "\(wordCount)")
+                }
+                Section("Properties") {
+                    LabeledContent("Priority", value: note.priority.label)
+                    LabeledContent("Flagged", value: note.isFlagged ? "Yes" : "No")
+                    if let date = note.reminderDate {
+                        LabeledContent("Reminder", value: date.formatted(date: .long, time: .shortened))
+                    } else {
+                        LabeledContent("Reminder", value: "None")
+                    }
+                }
+            }
+            .navigationTitle("Note Info")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        showingMetadata = false
+                    }
+                }
+            }
+        }
+        .presentationDetents([.medium])
+    }
+
+    // MARK: - Helpers
+
+    private var wordCount: Int {
+        note.content.split(whereSeparator: { $0.isWhitespace || $0.isNewline }).count
+    }
+
+    private var priorityColor: Color {
+        switch note.priority {
+        case .none: return .secondary
+        case .low: return .blue
+        case .medium: return .orange
+        case .high: return .red
+        }
     }
 
     private func saveNote() {
@@ -93,9 +317,87 @@ struct NoteEditorView: View {
     }
 }
 
+// MARK: - Reminder Picker View
+
+struct ReminderPickerView: View {
+    @Binding var reminderDate: Date
+    @Binding var hasReminder: Bool
+    @Environment(\.dismiss) private var dismiss
+
+    private let quickOptions: [(String, TimeInterval)] = [
+        ("In 1 hour", 3600),
+        ("In 3 hours", 10800),
+        ("Tomorrow morning", 0), // handled specially
+        ("In 1 week", 604800)
+    ]
+
+    var body: some View {
+        List {
+            Section("Quick Options") {
+                ForEach(quickOptions, id: \.0) { option in
+                    Button {
+                        if option.0 == "Tomorrow morning" {
+                            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+                            reminderDate = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: tomorrow)!
+                        } else {
+                            reminderDate = Date().addingTimeInterval(option.1)
+                        }
+                        dismiss()
+                    } label: {
+                        Text(option.0)
+                    }
+                }
+            }
+
+            Section("Custom") {
+                DatePicker(
+                    "Date & Time",
+                    selection: $reminderDate,
+                    in: Date()...,
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+                .datePickerStyle(.graphical)
+            }
+
+            if hasReminder {
+                Section {
+                    Button(role: .destructive) {
+                        hasReminder = false
+                        dismiss()
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Text("Remove Reminder")
+                            Spacer()
+                        }
+                    }
+                }
+            }
+        }
+        .navigationTitle("Set Reminder")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Cancel") {
+                    dismiss()
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Set") {
+                    dismiss()
+                }
+                .fontWeight(.semibold)
+            }
+        }
+    }
+}
+
 #Preview {
     NavigationStack {
-        NoteEditorView(note: Note(title: "Sample", content: "Hello world"), isNew: false)
-            .environmentObject(NoteStore())
+        NoteEditorView(
+            note: Note(title: "Sample", content: "Hello world", priority: .medium, isFlagged: true),
+            isNew: false
+        )
+        .environmentObject(NoteStore())
     }
 }
