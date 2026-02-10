@@ -14,6 +14,7 @@
 		AA000005 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100005 /* NoteListView.swift */; };
 		AA000006 /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100006 /* NoteEditorView.swift */; };
 		AA000007 /* NoteRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100007 /* NoteRowView.swift */; };
+		AA000010 /* NoteGridItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100010 /* NoteGridItemView.swift */; };
 		AA000008 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100008 /* Assets.xcassets */; };
 		AA000009 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100009 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -26,6 +27,7 @@
 		AA100005 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
 		AA100006 /* NoteEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorView.swift; sourceTree = "<group>"; };
 		AA100007 /* NoteRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRowView.swift; sourceTree = "<group>"; };
+		AA100010 /* NoteGridItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteGridItemView.swift; sourceTree = "<group>"; };
 		AA100008 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA100009 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AA200001 /* SwiftNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,6 +80,7 @@
 				AA100005 /* NoteListView.swift */,
 				AA100006 /* NoteEditorView.swift */,
 				AA100007 /* NoteRowView.swift */,
+				AA100010 /* NoteGridItemView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 				AA000005 /* NoteListView.swift in Sources */,
 				AA000006 /* NoteEditorView.swift in Sources */,
 				AA000007 /* NoteRowView.swift in Sources */,
+				AA000010 /* NoteGridItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

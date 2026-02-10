@@ -31,11 +31,69 @@ class NoteStore: ObservableObject {
         save()
     }
 
+    func toggleFlag(_ note: Note) {
+        if let index = notes.firstIndex(where: { $0.id == note.id }) {
+            notes[index].isFlagged.toggle()
+            notes[index].updatedAt = Date()
+            save()
+        }
+    }
+
+    func setPriority(_ note: Note, priority: NotePriority) {
+        if let index = notes.firstIndex(where: { $0.id == note.id }) {
+            notes[index].priority = priority
+            notes[index].updatedAt = Date()
+            save()
+        }
+    }
+
+    func setReminder(_ note: Note, date: Date?) {
+        if let index = notes.firstIndex(where: { $0.id == note.id }) {
+            notes[index].reminderDate = date
+            notes[index].updatedAt = Date()
+            save()
+        }
+    }
+
     func search(_ query: String) -> [Note] {
         guard !query.isEmpty else { return notes }
         return notes.filter {
             $0.title.localizedCaseInsensitiveContains(query) ||
             $0.content.localizedCaseInsensitiveContains(query)
+        }
+    }
+
+    func filtered(by filter: NoteFilter, searchQuery: String) -> [Note] {
+        var result = search(searchQuery)
+
+        switch filter {
+        case .all:
+            break
+        case .flagged:
+            result = result.filter { $0.isFlagged }
+        case .hasReminder:
+            result = result.filter { $0.hasReminder }
+        case .highPriority:
+            result = result.filter { $0.priority == .high }
+        }
+
+        return result
+    }
+
+    func sorted(_ notes: [Note], by order: NoteSortOrder) -> [Note] {
+        switch order {
+        case .updatedNewest:
+            return notes.sorted { $0.updatedAt > $1.updatedAt }
+        case .updatedOldest:
+            return notes.sorted { $0.updatedAt < $1.updatedAt }
+        case .priorityHighFirst:
+            return notes.sorted { $0.priority > $1.priority }
+        case .priorityLowFirst:
+            return notes.sorted { $0.priority < $1.priority }
+        case .titleAZ:
+            return notes.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        case .titleZA:
+            return notes.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }
         }
     }
 
@@ -48,7 +106,9 @@ class NoteStore: ObservableObject {
 
     private func save() {
         do {
-            let data = try JSONEncoder().encode(notes)
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            let data = try encoder.encode(notes)
             try data.write(to: fileURL, options: .atomic)
         } catch {
             print("Failed to save notes: \(error.localizedDescription)")
@@ -58,7 +118,9 @@ class NoteStore: ObservableObject {
     private func load() {
         do {
             let data = try Data(contentsOf: fileURL)
-            notes = try JSONDecoder().decode([Note].self, from: data)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            notes = try decoder.decode([Note].self, from: data)
         } catch {
             notes = []
         }
