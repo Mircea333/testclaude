@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct NoteRowView: View {
+    @EnvironmentObject var notebookStore: NotebookStore
     let note: Note
 
     var body: some View {
@@ -58,6 +59,32 @@ struct NoteRowView: View {
                             .font(.caption2)
                     }
                     .foregroundColor(note.isReminderOverdue ? .red : .purple)
+                }
+
+                if !note.tagIDs.isEmpty {
+                    HStack(spacing: 4) {
+                        ForEach(notebookStore.tags(for: note.tagIDs)) { tag in
+                            HStack(spacing: 2) {
+                                Circle()
+                                    .fill(tag.color)
+                                    .frame(width: 6, height: 6)
+                                Text(tag.name)
+                                    .font(.caption2)
+                            }
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 1)
+                            .background(tag.color.opacity(0.1))
+                            .cornerRadius(3)
+                        }
+                    }
+                }
+
+                if note.isPinned {
+                    HStack(spacing: 2) {
+                        Image(systemName: "pin.fill")
+                            .font(.caption2)
+                            .foregroundColor(.accentColor)
+                    }
                 }
             }
         }

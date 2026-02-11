@@ -2,11 +2,14 @@ import SwiftUI
 
 struct NoteListView: View {
     @EnvironmentObject var noteStore: NoteStore
+    @EnvironmentObject var notebookStore: NotebookStore
     @State private var searchText = ""
     @State private var showingNewNote = false
     @State private var viewMode: ViewMode = .list
     @State private var activeFilter: NoteFilter = .all
     @State private var sortOrder: NoteSortOrder = .updatedNewest
+    @State private var selectedNotebookID: UUID?
+    @State private var showingSidebar = false
 
     private let gridColumns = [
         GridItem(.flexible(), spacing: 12),
@@ -14,12 +17,13 @@ struct NoteListView: View {
     ]
 
     var filteredNotes: [Note] {
-        let filtered = noteStore.filtered(by: activeFilter, searchQuery: searchText)
+        let filtered = noteStore.filtered(by: activeFilter, searchQuery: searchText, notebookID: selectedNotebookID)
         return noteStore.sorted(filtered, by: sortOrder)
     }
 
     var body: some View {
         VStack(spacing: 0) {
+            notebookBar
             filterBar
 
             if filteredNotes.isEmpty {
@@ -37,7 +41,12 @@ struct NoteListView: View {
         .navigationTitle("Notes")
         .searchable(text: $searchText, prompt: "Search notes")
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                Button {
+                    showingSidebar = true
+                } label: {
+                    Image(systemName: "line.3.horizontal")
+                }
                 sortMenu
             }
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -47,6 +56,9 @@ struct NoteListView: View {
                 } label: {
                     Image(systemName: "square.and.pencil")
                 }
+                NavigationLink(destination: SettingsView()) {
+                    Image(systemName: "gearshape")
+                }
             }
         }
         .sheet(isPresented: $showingNewNote) {
@@ -54,6 +66,60 @@ struct NoteListView: View {
                 NoteEditorView(note: Note(), isNew: true)
             }
         }
+        .sheet(isPresented: $showingSidebar) {
+            SidebarMenuView(
+                onSelectAllNotes: { selectedNotebookID = nil },
+                onSelectNotebook: { id in selectedNotebookID = id }
+            )
+            .presentationDetents([.medium, .large])
+        }
+    }
+
+    // MARK: - Notebook Bar
+
+    private var notebookBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        selectedNotebookID = nil
+                    }
+                } label: {
+                    Text("All")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(selectedNotebookID == nil ? Color.accentColor : Color(.tertiarySystemFill))
+                        .foregroundColor(selectedNotebookID == nil ? .white : .primary)
+                        .cornerRadius(16)
+                }
+
+                ForEach(notebookStore.notebooks) { notebook in
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedNotebookID = notebook.id
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: notebook.iconName)
+                                .font(.caption2)
+                            Text(notebook.name)
+                                .font(.caption)
+                                .fontWeight(.medium)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(selectedNotebookID == notebook.id ? Color.accentColor : Color(.tertiarySystemFill))
+                        .foregroundColor(selectedNotebookID == notebook.id ? .white : .primary)
+                        .cornerRadius(16)
+                    }
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 6)
+        }
+        .background(Color(.systemGroupedBackground))
     }
 
     // MARK: - Filter Bar
@@ -143,22 +209,38 @@ struct NoteListView: View {
                         )
                     }
                     .tint(.orange)
+
+                    Button {
+                        noteStore.archive(note)
+                    } label: {
+                        Label("Archive", systemImage: "archivebox")
+                    }
+                    .tint(.indigo)
                 }
                 .swipeActions(edge: .trailing) {
                     Button(role: .destructive) {
                         noteStore.delete(note)
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        Label("Trash", systemImage: "trash")
                     }
                 }
                 .contextMenu {
+                    pinContextMenuItem(for: note)
                     flagContextMenuItem(for: note)
                     priorityContextMenu(for: note)
+
+                    Button {
+                        noteStore.archive(note)
+                    } label: {
+                        Label("Archive", systemImage: "archivebox")
+                    }
+
                     Divider()
+
                     Button(role: .destructive) {
                         noteStore.delete(note)
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        Label("Move to Trash", systemImage: "trash")
                     }
                 }
             }
@@ -177,13 +259,22 @@ struct NoteListView: View {
                     }
                     .buttonStyle(.plain)
                     .contextMenu {
+                        pinContextMenuItem(for: note)
                         flagContextMenuItem(for: note)
                         priorityContextMenu(for: note)
+
+                        Button {
+                            noteStore.archive(note)
+                        } label: {
+                            Label("Archive", systemImage: "archivebox")
+                        }
+
                         Divider()
+
                         Button(role: .destructive) {
                             noteStore.delete(note)
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            Label("Move to Trash", systemImage: "trash")
                         }
                     }
                 }
@@ -194,6 +285,17 @@ struct NoteListView: View {
     }
 
     // MARK: - Context Menu Items
+
+    private func pinContextMenuItem(for note: Note) -> some View {
+        Button {
+            noteStore.togglePin(note)
+        } label: {
+            Label(
+                note.isPinned ? "Unpin" : "Pin",
+                systemImage: note.isPinned ? "pin.slash" : "pin"
+            )
+        }
+    }
 
     private func flagContextMenuItem(for note: Note) -> some View {
         Button {
@@ -291,5 +393,6 @@ struct NoteListView: View {
     NavigationStack {
         NoteListView()
             .environmentObject(NoteStore())
+            .environmentObject(NotebookStore())
     }
 }

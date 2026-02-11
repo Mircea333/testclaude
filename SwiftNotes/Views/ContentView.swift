@@ -1,9 +1,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var userProfileStore: UserProfileStore
+
     var body: some View {
-        NavigationStack {
-            NoteListView()
+        if userProfileStore.isLoggedIn {
+            NavigationStack {
+                NoteListView()
+            }
+        } else {
+            NavigationStack {
+                LoginView()
+            }
         }
     }
 }
@@ -11,4 +19,6 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(NoteStore())
+        .environmentObject(SettingsStore())
+        .environmentObject(UserProfileStore())
 }

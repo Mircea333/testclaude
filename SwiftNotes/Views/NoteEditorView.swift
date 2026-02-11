@@ -2,6 +2,7 @@ import SwiftUI
 
 struct NoteEditorView: View {
     @EnvironmentObject var noteStore: NoteStore
+    @EnvironmentObject var notebookStore: NotebookStore
     @Environment(\.dismiss) private var dismiss
 
     @State var note: Note
@@ -10,6 +11,7 @@ struct NoteEditorView: View {
     @State private var showingDeleteAlert = false
     @State private var showingReminderPicker = false
     @State private var showingMetadata = false
+    @State private var showingTagPicker = false
     @FocusState private var isTitleFocused: Bool
 
     var body: some View {
@@ -132,20 +134,25 @@ struct NoteEditorView: View {
                 saveExistingNote()
             }
         }
-        .alert("Delete Note", isPresented: $showingDeleteAlert) {
-            Button("Delete", role: .destructive) {
+        .alert("Move to Trash", isPresented: $showingDeleteAlert) {
+            Button("Move to Trash", role: .destructive) {
                 noteStore.delete(note)
                 dismiss()
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Are you sure you want to delete this note? This action cannot be undone.")
+            Text("This note will be moved to trash. You can restore it within 30 days.")
         }
         .sheet(isPresented: $showingReminderPicker) {
             reminderPickerSheet
         }
         .sheet(isPresented: $showingMetadata) {
             noteInfoSheet
+        }
+        .sheet(isPresented: $showingTagPicker) {
+            NavigationStack {
+                TagPickerView(selectedTagIDs: $note.tagIDs)
+            }
         }
     }
 
@@ -229,6 +236,64 @@ struct NoteEditorView: View {
                     .foregroundColor(note.hasReminder ? .purple : .secondary)
                     .cornerRadius(14)
                 }
+
+                // Notebook picker chip
+                Menu {
+                    Button {
+                        note.notebookID = nil
+                    } label: {
+                        HStack {
+                            Text("None")
+                            if note.notebookID == nil {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                    ForEach(notebookStore.notebooks) { notebook in
+                        Button {
+                            note.notebookID = notebook.id
+                        } label: {
+                            HStack {
+                                Image(systemName: notebook.iconName)
+                                Text(notebook.name)
+                                if note.notebookID == notebook.id {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "folder")
+                            .font(.caption2)
+                        Text(notebookName)
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(note.notebookID != nil ? Color.teal.opacity(0.15) : Color(.tertiarySystemFill))
+                    .foregroundColor(note.notebookID != nil ? .teal : .secondary)
+                    .cornerRadius(14)
+                }
+
+                // Tags chip
+                Button {
+                    showingTagPicker = true
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "tag")
+                            .font(.caption2)
+                        Text(note.tagIDs.isEmpty ? "Tags" : "\(note.tagIDs.count) tags")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(!note.tagIDs.isEmpty ? Color.green.opacity(0.15) : Color(.tertiarySystemFill))
+                    .foregroundColor(!note.tagIDs.isEmpty ? .green : .secondary)
+                    .cornerRadius(14)
+                }
             }
             .padding(.horizontal)
             .padding(.vertical, 6)
@@ -288,6 +353,14 @@ struct NoteEditorView: View {
     }
 
     // MARK: - Helpers
+
+    private var notebookName: String {
+        if let id = note.notebookID,
+           let notebook = notebookStore.notebooks.first(where: { $0.id == id }) {
+            return notebook.name
+        }
+        return "Notebook"
+    }
 
     private var wordCount: Int {
         note.content.split(whereSeparator: { $0.isWhitespace || $0.isNewline }).count
