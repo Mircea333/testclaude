@@ -17,6 +17,33 @@
 		AA000010 /* NoteGridItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100010 /* NoteGridItemView.swift */; };
 		AA000008 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100008 /* Assets.xcassets */; };
 		AA000009 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100009 /* Preview Assets.xcassets */; };
+		BB000001 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100001 /* AppSettings.swift */; };
+		BB000002 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100002 /* ImageStore.swift */; };
+		BB000003 /* NoteContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100003 /* NoteContent.swift */; };
+		BB000004 /* Notebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100004 /* Notebook.swift */; };
+		BB000005 /* NotebookStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100005 /* NotebookStore.swift */; };
+		BB000006 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100006 /* SettingsStore.swift */; };
+		BB000007 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100007 /* Tag.swift */; };
+		BB000008 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100008 /* UserProfile.swift */; };
+		BB000009 /* UserProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100009 /* UserProfileStore.swift */; };
+		BB000010 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100010 /* LoginView.swift */; };
+		BB000011 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100011 /* ProfileView.swift */; };
+		BB000012 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100012 /* SignupView.swift */; };
+		BB000013 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100013 /* ArchiveView.swift */; };
+		BB000014 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100014 /* DashboardView.swift */; };
+		BB000015 /* QuickActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100015 /* QuickActionsView.swift */; };
+		BB000016 /* StatCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100016 /* StatCardView.swift */; };
+		BB000017 /* FormattingToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100017 /* FormattingToolbar.swift */; };
+		BB000018 /* PhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100018 /* PhotoPickerView.swift */; };
+		BB000019 /* RichTextEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100019 /* RichTextEditorView.swift */; };
+		BB000020 /* NotebookEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100020 /* NotebookEditorView.swift */; };
+		BB000021 /* NotebookListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100021 /* NotebookListView.swift */; };
+		BB000022 /* FontSizeModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100022 /* FontSizeModifier.swift */; };
+		BB000023 /* SidebarMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100023 /* SidebarMenuView.swift */; };
+		BB000024 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100024 /* SettingsView.swift */; };
+		BB000025 /* TagManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100025 /* TagManagerView.swift */; };
+		BB000026 /* TagPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100026 /* TagPickerView.swift */; };
+		BB000027 /* TrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB100027 /* TrashView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +58,33 @@
 		AA100008 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA100009 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AA200001 /* SwiftNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB100001 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		BB100002 /* ImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
+		BB100003 /* NoteContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteContent.swift; sourceTree = "<group>"; };
+		BB100004 /* Notebook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notebook.swift; sourceTree = "<group>"; };
+		BB100005 /* NotebookStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookStore.swift; sourceTree = "<group>"; };
+		BB100006 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		BB100007 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		BB100008 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		BB100009 /* UserProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileStore.swift; sourceTree = "<group>"; };
+		BB100010 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		BB100011 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		BB100012 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		BB100013 /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
+		BB100014 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		BB100015 /* QuickActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionsView.swift; sourceTree = "<group>"; };
+		BB100016 /* StatCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatCardView.swift; sourceTree = "<group>"; };
+		BB100017 /* FormattingToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattingToolbar.swift; sourceTree = "<group>"; };
+		BB100018 /* PhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerView.swift; sourceTree = "<group>"; };
+		BB100019 /* RichTextEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichTextEditorView.swift; sourceTree = "<group>"; };
+		BB100020 /* NotebookEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookEditorView.swift; sourceTree = "<group>"; };
+		BB100021 /* NotebookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookListView.swift; sourceTree = "<group>"; };
+		BB100022 /* FontSizeModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSizeModifier.swift; sourceTree = "<group>"; };
+		BB100023 /* SidebarMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarMenuView.swift; sourceTree = "<group>"; };
+		BB100024 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BB100025 /* TagManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagerView.swift; sourceTree = "<group>"; };
+		BB100026 /* TagPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPickerView.swift; sourceTree = "<group>"; };
+		BB100027 /* TrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,8 +121,17 @@
 		AA400003 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				BB100001 /* AppSettings.swift */,
+				BB100002 /* ImageStore.swift */,
 				AA100003 /* Note.swift */,
+				BB100003 /* NoteContent.swift */,
 				AA100004 /* NoteStore.swift */,
+				BB100004 /* Notebook.swift */,
+				BB100005 /* NotebookStore.swift */,
+				BB100006 /* SettingsStore.swift */,
+				BB100007 /* Tag.swift */,
+				BB100008 /* UserProfile.swift */,
+				BB100009 /* UserProfileStore.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -81,6 +144,16 @@
 				AA100006 /* NoteEditorView.swift */,
 				AA100007 /* NoteRowView.swift */,
 				AA100010 /* NoteGridItemView.swift */,
+				BB400001 /* Account */,
+				BB400002 /* Archive */,
+				BB400003 /* Dashboard */,
+				BB400004 /* Editor */,
+				BB400005 /* Folders */,
+				BB400006 /* Helpers */,
+				BB400007 /* Navigation */,
+				BB400008 /* Settings */,
+				BB400009 /* Tags */,
+				BB400010 /* Trash */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -99,6 +172,94 @@
 				AA100009 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		BB400001 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				BB100010 /* LoginView.swift */,
+				BB100011 /* ProfileView.swift */,
+				BB100012 /* SignupView.swift */,
+			);
+			path = Account;
+			sourceTree = "<group>";
+		};
+		BB400002 /* Archive */ = {
+			isa = PBXGroup;
+			children = (
+				BB100013 /* ArchiveView.swift */,
+			);
+			path = Archive;
+			sourceTree = "<group>";
+		};
+		BB400003 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				BB100014 /* DashboardView.swift */,
+				BB100015 /* QuickActionsView.swift */,
+				BB100016 /* StatCardView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		BB400004 /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				BB100017 /* FormattingToolbar.swift */,
+				BB100018 /* PhotoPickerView.swift */,
+				BB100019 /* RichTextEditorView.swift */,
+			);
+			path = Editor;
+			sourceTree = "<group>";
+		};
+		BB400005 /* Folders */ = {
+			isa = PBXGroup;
+			children = (
+				BB100020 /* NotebookEditorView.swift */,
+				BB100021 /* NotebookListView.swift */,
+			);
+			path = Folders;
+			sourceTree = "<group>";
+		};
+		BB400006 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				BB100022 /* FontSizeModifier.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		BB400007 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				BB100023 /* SidebarMenuView.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		BB400008 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				BB100024 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		BB400009 /* Tags */ = {
+			isa = PBXGroup;
+			children = (
+				BB100025 /* TagManagerView.swift */,
+				BB100026 /* TagPickerView.swift */,
+			);
+			path = Tags;
+			sourceTree = "<group>";
+		};
+		BB400010 /* Trash */ = {
+			isa = PBXGroup;
+			children = (
+				BB100027 /* TrashView.swift */,
+			);
+			path = Trash;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -174,11 +335,38 @@
 				AA000001 /* SwiftNotesApp.swift in Sources */,
 				AA000002 /* ContentView.swift in Sources */,
 				AA000003 /* Note.swift in Sources */,
+				BB000003 /* NoteContent.swift in Sources */,
 				AA000004 /* NoteStore.swift in Sources */,
 				AA000005 /* NoteListView.swift in Sources */,
 				AA000006 /* NoteEditorView.swift in Sources */,
 				AA000007 /* NoteRowView.swift in Sources */,
 				AA000010 /* NoteGridItemView.swift in Sources */,
+				BB000001 /* AppSettings.swift in Sources */,
+				BB000002 /* ImageStore.swift in Sources */,
+				BB000004 /* Notebook.swift in Sources */,
+				BB000005 /* NotebookStore.swift in Sources */,
+				BB000006 /* SettingsStore.swift in Sources */,
+				BB000007 /* Tag.swift in Sources */,
+				BB000008 /* UserProfile.swift in Sources */,
+				BB000009 /* UserProfileStore.swift in Sources */,
+				BB000010 /* LoginView.swift in Sources */,
+				BB000011 /* ProfileView.swift in Sources */,
+				BB000012 /* SignupView.swift in Sources */,
+				BB000013 /* ArchiveView.swift in Sources */,
+				BB000014 /* DashboardView.swift in Sources */,
+				BB000015 /* QuickActionsView.swift in Sources */,
+				BB000016 /* StatCardView.swift in Sources */,
+				BB000017 /* FormattingToolbar.swift in Sources */,
+				BB000018 /* PhotoPickerView.swift in Sources */,
+				BB000019 /* RichTextEditorView.swift in Sources */,
+				BB000020 /* NotebookEditorView.swift in Sources */,
+				BB000021 /* NotebookListView.swift in Sources */,
+				BB000022 /* FontSizeModifier.swift in Sources */,
+				BB000023 /* SidebarMenuView.swift in Sources */,
+				BB000024 /* SettingsView.swift in Sources */,
+				BB000025 /* TagManagerView.swift in Sources */,
+				BB000026 /* TagPickerView.swift in Sources */,
+				BB000027 /* TrashView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
