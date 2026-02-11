@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct NoteGridItemView: View {
+    @EnvironmentObject var notebookStore: NotebookStore
     let note: Note
 
     var body: some View {
@@ -24,9 +25,30 @@ struct NoteGridItemView: View {
                 .foregroundColor(.secondary)
                 .lineLimit(3)
 
+            if !note.tagIDs.isEmpty {
+                HStack(spacing: 4) {
+                    ForEach(notebookStore.tags(for: note.tagIDs).prefix(3)) { tag in
+                        Circle()
+                            .fill(tag.color)
+                            .frame(width: 8, height: 8)
+                    }
+                    if note.tagIDs.count > 3 {
+                        Text("+\(note.tagIDs.count - 3)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+
             Spacer()
 
             HStack(spacing: 6) {
+                if note.isPinned {
+                    Image(systemName: "pin.fill")
+                        .font(.caption2)
+                        .foregroundColor(.accentColor)
+                }
+
                 if note.priority != .none {
                     priorityBadge
                 }

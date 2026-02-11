@@ -38,7 +38,7 @@ enum NotePriority: Int, Codable, CaseIterable, Comparable {
     }
 }
 
-enum ViewMode: String, CaseIterable {
+enum ViewMode: String, Codable, CaseIterable {
     case list
     case grid
 
@@ -75,7 +75,7 @@ enum NoteFilter: String, CaseIterable {
     }
 }
 
-enum NoteSortOrder: String, CaseIterable {
+enum NoteSortOrder: String, Codable, CaseIterable {
     case updatedNewest
     case updatedOldest
     case priorityHighFirst
@@ -104,6 +104,13 @@ struct Note: Identifiable, Codable, Equatable {
     var priority: NotePriority
     var isFlagged: Bool
     var reminderDate: Date?
+    var notebookID: UUID?
+    var tagIDs: [UUID]
+    var isTrashed: Bool
+    var isArchived: Bool
+    var trashedAt: Date?
+    var isPinned: Bool
+    var blocks: [NoteBlock]?
 
     init(
         id: UUID = UUID(),
@@ -113,7 +120,14 @@ struct Note: Identifiable, Codable, Equatable {
         updatedAt: Date = Date(),
         priority: NotePriority = .none,
         isFlagged: Bool = false,
-        reminderDate: Date? = nil
+        reminderDate: Date? = nil,
+        notebookID: UUID? = nil,
+        tagIDs: [UUID] = [],
+        isTrashed: Bool = false,
+        isArchived: Bool = false,
+        trashedAt: Date? = nil,
+        isPinned: Bool = false,
+        blocks: [NoteBlock]? = nil
     ) {
         self.id = id
         self.title = title
@@ -123,15 +137,61 @@ struct Note: Identifiable, Codable, Equatable {
         self.priority = priority
         self.isFlagged = isFlagged
         self.reminderDate = reminderDate
+        self.notebookID = notebookID
+        self.tagIDs = tagIDs
+        self.isTrashed = isTrashed
+        self.isArchived = isArchived
+        self.trashedAt = trashedAt
+        self.isPinned = isPinned
+        self.blocks = blocks
+    }
+
+    // Backward-compatible decoding for existing JSON data
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        content = try container.decode(String.self, forKey: .content)
+        createdAt = try container.decode(Date.self, forKey: .createdAt)
+        updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+        priority = try container.decode(NotePriority.self, forKey: .priority)
+        isFlagged = try container.decode(Bool.self, forKey: .isFlagged)
+        reminderDate = try container.decodeIfPresent(Date.self, forKey: .reminderDate)
+        notebookID = try container.decodeIfPresent(UUID.self, forKey: .notebookID)
+        tagIDs = try container.decodeIfPresent([UUID].self, forKey: .tagIDs) ?? []
+        isTrashed = try container.decodeIfPresent(Bool.self, forKey: .isTrashed) ?? false
+        isArchived = try container.decodeIfPresent(Bool.self, forKey: .isArchived) ?? false
+        trashedAt = try container.decodeIfPresent(Date.self, forKey: .trashedAt)
+        isPinned = try container.decodeIfPresent(Bool.self, forKey: .isPinned) ?? false
+        blocks = try container.decodeIfPresent([NoteBlock].self, forKey: .blocks)
+    }
+
+    var isActive: Bool {
+        !isTrashed && !isArchived
     }
 
     var preview: String {
-        let lines = content.split(separator: "\n", omittingEmptySubsequences: true)
+        let text = displayContent
+        let lines = text.split(separator: "\n", omittingEmptySubsequences: true)
         if let firstLine = lines.first {
-            let text = String(firstLine)
-            return text.count > 100 ? String(text.prefix(100)) + "..." : text
+            let lineText = String(firstLine)
+            return lineText.count > 100 ? String(lineText.prefix(100)) + "..." : lineText
         }
         return "No additional text"
+    }
+
+    var displayContent: String {
+        if let blocks = blocks, !blocks.isEmpty {
+            return blocks
+                .filter { $0.type != .image && $0.type != .divider }
+                .map { $0.text }
+                .joined(separator: "\n")
+        }
+        return content
+    }
+
+    var hasRichContent: Bool {
+        blocks != nil && !(blocks?.isEmpty ?? true)
     }
 
     var hasReminder: Bool {
